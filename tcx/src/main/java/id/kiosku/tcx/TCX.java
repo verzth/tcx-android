@@ -42,7 +42,7 @@ public class TCX {
         this.URL = URL;
         this.ID = ID;
         this.KEY = KEY;
-        this.TOKEN = TOKEN;
+        this.TOKEN = TOKEN!=null?CryptoDriver.Base64.encode(TOKEN.getBytes(Charset.forName("UTF-8"))):"";
     }
 
     public String getPassToken(){
