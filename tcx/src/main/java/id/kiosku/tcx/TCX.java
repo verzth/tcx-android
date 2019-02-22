@@ -18,12 +18,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TCX {
+    public static final int AUTH_DEFAULT = 0;
+    public static final int AUTH_PARAM = 1;
+    public static final int AUTH_TIME = 2;
     private static TCX anInstance;
 
     private String URL;
     private String ID;
     private String KEY;
     private String TOKEN;
+    private int AUTH;
 
     public static TCX getInstance() {
         return anInstance;
@@ -32,17 +36,30 @@ public class TCX {
     public static void init(String URL, String ID, String KEY){
         anInstance = new TCX(URL,ID,KEY);
     }
+    public static void init(String URL, String ID, String KEY, int AUTH){
+        anInstance = new TCX(URL,ID,KEY,AUTH);
+    }
     public static void init(String URL, String ID, String KEY, String TOKEN){
         anInstance = new TCX(URL,ID,KEY,TOKEN);
     }
-    public TCX(String URL, String ID,String KEY){
-        this(URL,ID,KEY,null);
+    public static void init(String URL, String ID, String KEY, String TOKEN, int AUTH){
+        anInstance = new TCX(URL,ID,KEY,TOKEN,AUTH);
     }
-    public TCX(String URL, String ID, String KEY, String TOKEN){
+    public TCX(String URL, String ID,String KEY){
+        this(URL,ID,KEY,null,AUTH_DEFAULT);
+    }
+    public TCX(String URL, String ID,String KEY,int AUTH){
+        this(URL,ID,KEY,null,AUTH);
+    }
+    public TCX(String URL, String ID,String KEY, String TOKEN){
+        this(URL,ID,KEY,TOKEN,AUTH_DEFAULT);
+    }
+    public TCX(String URL, String ID, String KEY, String TOKEN, int AUTH){
         this.URL = URL;
         this.ID = ID;
         this.KEY = KEY;
         this.TOKEN = TOKEN!=null?CryptoDriver.Base64.encode(TOKEN.getBytes(Charset.forName("UTF-8"))):"";
+        this.AUTH = AUTH;
     }
 
     public String getPassToken(){
@@ -73,6 +90,9 @@ public class TCX {
     }
     public String getMasterToken(){
         return TOKEN;
+    }
+    public int getAuth(){
+        return AUTH;
     }
 
     public void getToken(final OnTokenReceive onTokenReceive){

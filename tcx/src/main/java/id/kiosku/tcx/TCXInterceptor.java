@@ -22,8 +22,19 @@ public class TCXInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         if(this.tcx == null) this.tcx = TCX.getInstance();
-        final String tcxPassToken = this.tcx.getPassToken();
-        final String tcxPass = this.tcx.getPass(tcxPassToken);
+        String tcxPassToken = this.tcx.getPassToken();
+        String tcxPass;
+        switch (this.tcx.getAuth()){
+            case TCX.AUTH_PARAM:{
+                tcxPass = this.tcx.getPass();
+            }break;
+            case TCX.AUTH_TIME:{
+                tcxPass = this.tcx.getPass(tcxPassToken);
+            }break;
+            default:{
+                tcxPass = this.tcx.getPass();
+            }
+        }
 
         Request request = chain.request();
 
