@@ -8,13 +8,22 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class TCXInterceptor implements Interceptor {
+    private TCX tcx;
+    public TCXInterceptor(){}
+    public TCXInterceptor(TCX tcx){
+        this.tcx = tcx;
+    }
     public static TCXInterceptor create(){
         return new TCXInterceptor();
     }
+    public static TCXInterceptor create(TCX tcx){
+        return new TCXInterceptor(tcx);
+    }
     @Override
     public Response intercept(Chain chain) throws IOException {
-        final String tcxPassToken = TCX.getInstance().getPassToken();
-        final String tcxPass = TCX.getInstance().getPass(tcxPassToken);
+        if(this.tcx == null) this.tcx = TCX.getInstance();
+        final String tcxPassToken = this.tcx.getPassToken();
+        final String tcxPass = this.tcx.getPass(tcxPassToken);
 
         Request request = chain.request();
 
@@ -25,9 +34,9 @@ public class TCXInterceptor implements Interceptor {
 
         Request.Builder builder = request.newBuilder()
                 .addHeader("X-TCX-TYPE", "FTC")
-                .addHeader("X-TCX-APP-ID", TCX.getInstance().getID())
+                .addHeader("X-TCX-APP-ID", this.tcx.getID())
                 .addHeader("X-TCX-APP-PASS", tcxPass)
-                .addHeader("X-TCX-TOKEN", TCX.getInstance().getMasterToken())
+                .addHeader("X-TCX-TOKEN", this.tcx.getMasterToken())
                 .url(url);
 
         Request requestDone = builder.build();

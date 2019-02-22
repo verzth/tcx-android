@@ -1,0 +1,101 @@
+ext {
+    bintrayRepo = 'tcx-android'
+    bintrayName = 'tcx'
+
+    publishedGroupId = 'id.kiosku'
+    libraryName = 'TCXAndroid'
+    artifact = 'tcx-android'
+
+    libraryDescription = 'TCX Android was build to help android developer connect to Backend base on TCX Authentication.'
+
+    siteUrl = 'https://github.com/verzth/tcx-android'
+    gitUrl = 'https://github.com/verzth/tcx-android.git'
+
+    libraryVersion = project.versionName.toString()
+
+    developerId = 'verzth'
+    developerName = 'Dodi Triwibowo'
+    developerEmail = 'dodi@kiosku.id'
+
+    licenseName = 'The MIT License'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
+group = publishedGroupId
+version = libraryVersion
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'aar'
+            groupId publishedGroupId
+            artifactId artifact
+
+            name libraryName
+            description libraryDescription
+            url siteUrl
+
+            licenses {
+                license {
+                    name licenseName
+                    url licenseUrl
+                }
+            }
+            developers {
+                developer {
+                    id developerId
+                    name developerName
+                    email developerEmail
+                }
+            }
+            scm {
+                connection gitUrl
+                developerConnection gitUrl
+                url siteUrl
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+/*task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}*/
+
+artifacts {
+    //archives javadocJar
+    archives sourcesJar
+}
+
+bintray {
+    user = project.getProperties().get('bintray.user')
+    key = project.getProperties().get('bintray.apikey')
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        dryRun = false
+        publish = true
+        override = false
+        publicDownloadNumbers = true
+        version {
+            desc = libraryDescription
+        }
+    }
+}
