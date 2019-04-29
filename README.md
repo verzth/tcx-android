@@ -1,3 +1,4 @@
+[![Release](https://jitpack.io/v/verzth/tcx-android.svg)](https://jitpack.io/com/github/verzth/tcx-android)
 # TCX Android
 
 TCX Android was build to help android developer connect to Backend base on [TCX Authentication](https://github.com/verzth/tcx).
